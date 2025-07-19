@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="abc.dat 0x12A 0x48Fw" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -32,7 +33,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
+		</Linker>
+		<Unit filename="abc.dat" />
 		<Unit filename="main.cpp" />
+		<Unit filename="my-tools.cpp" />
+		<Unit filename="my-tools.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
