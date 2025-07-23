@@ -1,6 +1,13 @@
 #include "my-tools.h"
 #include <iostream>
 #include <string.h>
+#include <stdio.h>
+
+#define _WIN32
+
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 using namespace std;
 
@@ -9,6 +16,12 @@ unsigned int loAddr, hiAddr;
 
 int main(int nParams, char** params)
 {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+   // system("chcp 65001 >> nul");
+#endif
+
     // Єдиний нульовий параметр - назва самої програми (зі шляхом)
     if (nParams == 1){
         cout << "***********" << endl;
@@ -58,3 +71,5 @@ int main(int nParams, char** params)
 
     return 0;
 }
+
+
