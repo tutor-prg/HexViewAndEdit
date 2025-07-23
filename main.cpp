@@ -3,13 +3,14 @@
 #include <string.h>
 #include <stdio.h>
 
-#define _WIN32
+#define _WIN32 //Треба закоментувати цей рядок на Linux
 
 #ifdef _WIN32
     #include <windows.h>
 #endif
 
 void parseParameters(int nParams, char** params);
+void normalizeBoundaries();
 
 using namespace std;
 
@@ -25,11 +26,18 @@ int main(int nParams, char** params)
 #endif
 
     parseParameters(nParams, params);
-
 //  Контрольна точка - перевірка як і які параметри ми проситали
-    cout << fileName << endl;
-    cout <<hex<< loAddr << endl;
-    cout <<hex<< hiAddr << endl;
+//    cout << fileName << endl;
+//    cout <<hex<< loAddr << endl;
+//    cout <<hex<< hiAddr << endl;
+
+
+    //Нижню  адресу зменшуємо  до найближчої кратної 16
+    //Верхню адресу збільшуємо до найближчої кратної 16
+    normalizeBoundaries();
+//  Контрольна точка - перевірка нормалізованих адрес
+//    cout <<hex<< loAddr << endl;
+//    cout <<hex<< hiAddr << endl;
 
 
     return 0;
@@ -76,6 +84,14 @@ void parseParameters(int nParams, char** params){
         }
         sscanf(params[3], "%x", &hiAddr);
     }
+}
+
+
+void normalizeBoundaries(){
+    //Нижню  адресу зменшуємо  до найближчої кратної 16
+    //Верхню адресу збільшуємо до найближчої кратної 16
+    while (loAddr % 16 != 0) loAddr--;
+    while (hiAddr % 16 != 0) hiAddr++;
 }
 
 
