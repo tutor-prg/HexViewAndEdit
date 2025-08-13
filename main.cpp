@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
+#include <iomanip>
 
 #define _WIN32 //Треба закоментувати цей рядок на Linux
 
@@ -11,11 +12,12 @@
 
 void parseParameters(int nParams, char** params);
 void normalizeBoundaries();
+void showDamp();
 
 using namespace std;
 
 char fileName[500];
-unsigned int loAddr, hiAddr;
+unsigned int loAddr, hiAddr;  //Нижня межа ВКЛЮЧНО і верхня межа НЕ ВКЛЮЧНО
 
 int main(int nParams, char** params)
 {
@@ -39,9 +41,11 @@ int main(int nParams, char** params)
 //    cout <<hex<< loAddr << endl;
 //    cout <<hex<< hiAddr << endl;
 
+    showDamp();
 
     return 0;
 }
+
 
 void parseParameters(int nParams, char** params){
     // Єдиний нульовий параметр - назва самої програми (зі шляхом)
@@ -69,6 +73,8 @@ void parseParameters(int nParams, char** params){
         }
     }
 
+    //Нижня межа за умовчанням
+    loAddr = 0;
     if (nParams >= 3){
         if (!isStrShowsHex(params[2])){
             printf("Не вдалося зчитати/зрозуміти hex-значення для нижньої адреси: %s\n", params[2]);
@@ -77,6 +83,8 @@ void parseParameters(int nParams, char** params){
         sscanf(params[2], "%x", &loAddr);
     }
 
+    //Верхня межа за умовчанням
+    hiAddr = fileSize(fileName);
     if (nParams >= 4){
         if (!isStrShowsHex(params[3])){
             printf("Не вдалося зчитати/зрозуміти hex-значення для нижньої адреси: %s\n", params[3]);
@@ -95,5 +103,50 @@ void normalizeBoundaries(){
 }
 
 
+void showDamp(){
+    int buf_size = hiAddr - loAddr;
+    char* buf = new char[buf_size];
 
+    FILE* f = fopen(fileName, "rb");
+    fseek(f, loAddr, SEEK_SET);
+    int bytes_read = fread(buf, sizeof(char), buf_size, f);
+    fclose(f);
+
+    clearScreen();
+
+    int addr1 = 0;
+    int addr2 = addr1;
+    while (addr1 < buf_size){
+        cout << hex << setw(8) << setfill('0') << addr1 << "  ";
+        for (int i=0; i<16; i++){
+            if (addr1 < bytes_read){
+                    // (int)buf[addr]      int(buf[addr])      static_cast<int>(buf[addr])
+                //cout << " " << hex << uppercase << setw(2) << setfill('0') << (int)buf[addr1];
+                printf("%02X ", buf[addr1]);
+            }
+            else {
+                cout << "   ";
+            }
+            if (i==7) cout << " | ";
+            addr1++;
+        }
+
+        cout << "  ";
+        // Вивід ASCII
+        for (size_t i = 0; i < 16; i++) {
+            if (addr2 < bytes_read){
+                unsigned char c = buf[addr2];
+                printf("%c", isprint(c) ? c : '.');
+            }
+            else {
+                cout << " ";
+            }
+            addr2++;
+        }
+
+        cout << endl;
+    }
+
+    delete [] buf;
+}
 

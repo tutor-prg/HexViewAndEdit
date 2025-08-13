@@ -1,5 +1,6 @@
 #include "my-tools.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 bool fileExists(const char* fileName){
@@ -27,3 +28,28 @@ bool isStrShowsHex(const char* s){
     }
     return true;
 }
+
+void clearScreen(){
+    #ifdef _WIN32
+        system("CLS");
+    #else
+        system("clear");
+    #endif
+}
+
+long fileSize(const char* fileName){
+    FILE* f = fopen(fileName, "r");
+    if (f){
+        fseek(f, 0, SEEK_END);
+        long pos = ftell(f);
+        fclose(f);
+        return pos;
+    }
+    return 0;
+}
+
+
+
+
+
+

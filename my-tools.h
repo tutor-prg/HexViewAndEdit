@@ -1,7 +1,9 @@
-#ifndef MY-TOOLS_H_INCLUDED
-#define MY-TOOLS_H_INCLUDED
+#ifndef MY_TOOLS_H_INCLUDED
+#define MY_TOOLS_H_INCLUDED
 
 bool fileExists(const char* fileName);
+long fileSize(const char* fileName);
 bool isStrShowsHex(const char* s);
+void clearScreen();
 
-#endif // MY-TOOLS_H_INCLUDED
+#endif // MY_TOOLS_H_INCLUDED
